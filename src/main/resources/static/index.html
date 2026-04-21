@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lehman Lightning - Student ID Service</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #10b981 0%, #0ea5e9 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            color: #2d3748;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #10b981 0%, #0ea5e9 100%);
+            border-radius: 2px;
+            margin-right: 12px;
+        }
+
+        .api-list {
+            list-style: none;
+        }
+
+        .api-item {
+            background: #f7fafc;
+            border-left: 3px solid #10b981;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .api-item:hover {
+            background: #edf2f7;
+            transform: translateX(4px);
+        }
+
+        .api-method {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .api-endpoint {
+            font-family: 'Courier New', monospace;
+            color: #2d3748;
+            font-size: 14px;
+            font-weight: 500;
+            word-break: break-all;
+        }
+
+        .api-description {
+            color: #718096;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .query-form {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            color: #2d3748;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 500px) {
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981 0%, #0ea5e9 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .students-table th {
+            background: #edf2f7;
+            color: #2d3748;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #cbd5e0;
+        }
+
+        .students-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .students-table tr:hover {
+            background: #f7fafc;
+        }
+
+        .student-id-badge {
+            background: #0ea5e9;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .access-level {
+            display: inline-block;
+            background: #f0fff4;
+            color: #22543d;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .qr-example {
+            background: #f7fafc;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px dashed #cbd5e0;
+            text-align: center;
+            margin-top: 12px;
+        }
+
+        .qr-example p {
+            color: #718096;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+            font-size: 13px;
+        }
+
+        .lightning-icon {
+            display: inline-block;
+            font-size: 24px;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 24px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .section-title {
+                font-size: 16px;
+            }
+
+            .api-endpoint {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Kotlin Web App</h1>
+            <p class="subtitle">Student QR Generation</p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Database</h2>
+            <table class="students-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Major</th>
+                        <th>Access Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="student-id-badge">S1001</span></td>
+                        <td>Alice Johnson</td>
+                        <td>Computer Science</td>
+                        <td><span class="access-level">Level 2</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="student-id-badge">S1002</span></td>
+                        <td>Bob Chen</td>
+                        <td>Mathematics</td>
+                        <td><span class="access-level">Level 1</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="student-id-badge">S1003</span></td>
+                        <td>Priya Singh</td>
+                        <td>Undecided</td>
+                        <td><span class="access-level">Level 3</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">QR Generator</h2>
+            <div class="query-form">
+                <div class="form-group">
+                    <label for="student-select">Select Student:</label>
+                    <select id="student-select">
+                        <option value="">-- Choose a student --</option>
+                        <option value="S1001">S1001 - Alice Johnson</option>
+                        <option value="S1002">S1002 - Bob Chen</option>
+                        <option value="S1003">S1003 - Priya Singh</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="generateQRCode()">Generate QR Code</button>
+                    <button class="btn-secondary" onclick="fetchStudentInfo()">Fetch Info</button>
+                </div>
+                <div id="result" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Press generate QR code again after switching students to ensure correct code.</p>
+        </div>
+    </div>
+
+    <script>
+        function generateQRCode() {
+            const studentId = document.getElementById('student-select').value;
+            if (!studentId) {
+                showResult('error', 'Please select a student');
+                return;
+            }
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p style="color: #718096;">Generating QR code...</p>';
+
+            fetch(`/generate-id?sid=${studentId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to generate QR code');
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.style.maxWidth = '300px';
+                    img.style.borderRadius = '8px';
+                    img.style.marginTop = '16px';
+                    resultDiv.innerHTML = '<p style="color: #2d3748; font-weight: 500; margin-bottom: 12px;">QR Code Generated:</p>';
+                    resultDiv.appendChild(img);
+
+                    const downloadBtn = document.createElement('button');
+                    downloadBtn.className = 'btn-primary';
+                    downloadBtn.textContent = 'Download QR Code';
+                    downloadBtn.style.marginTop = '12px';
+                    downloadBtn.onclick = () => {
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `student_${studentId}_qr.png`;
+                        a.click();
+                    };
+                    resultDiv.appendChild(downloadBtn);
+                })
+                .catch(error => showResult('error', error.message));
+        }
+
+        function fetchStudentInfo() {
+            const studentId = document.getElementById('student-select').value;
+            if (!studentId) {
+                showResult('error', 'Please select a student');
+                return;
+            }
+
+            fetch(`/api/student/${studentId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Student not found');
+                    return response.json();
+                })
+                .then(data => {
+                    const html = `
+                        <div style="background: #f0fff4; border-left: 3px solid #48bb78; padding: 16px; border-radius: 4px;">
+                            <h3 style="color: #22543d; margin-bottom: 12px;">Student Information</h3>
+                            <p><strong>ID:</strong> ${data.id}</p>
+                            <p><strong>Name:</strong> ${data.name}</p>
+                            <p><strong>Major:</strong> ${data.major || 'Undecided'}</p>
+                            <p><strong>Access Level:</strong> ${data.accessLevel}</p>
+                        </div>
+                    `;
+                    document.getElementById('result').innerHTML = html;
+                })
+                .catch(error => showResult('error', error.message));
+        }
+
+        function showResult(type, message) {
+            const resultDiv = document.getElementById('result');
+            const bgColor = type === 'error' ? '#fed7d7' : '#c6f6d5';
+            const textColor = type === 'error' ? '#742a2a' : '#22543d';
+            const borderColor = type === 'error' ? '#fc8181' : '#48bb78';
+            resultDiv.innerHTML = `<div style="background: ${bgColor}; border-left: 3px solid ${borderColor}; color: ${textColor}; padding: 12px; border-radius: 4px;">${message}</div>`;
+        }
+
+        // Allow Enter key to generate QR code
+        document.getElementById('student-select').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') generateQRCode();
+        });
+    </script>
+</body>
+</html>
+
