@@ -74,3 +74,4 @@ fun generateQrCode(content: String, size: Int = 300): ByteArray {
     return outputStream.toByteArray()
 }
 
+
