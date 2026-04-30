@@ -1,2 +1,2 @@
-* linguist-language=Kotlin
-src/main/resources/static/* linguist-vendored
+*.kt linguist-language=Kotlin
+*.html linguist-detectable=false
